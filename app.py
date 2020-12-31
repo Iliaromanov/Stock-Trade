@@ -51,13 +51,6 @@ def index():
     return apology("TODO")
 
 
-@app.route("/buy", methods=["GET", "POST"])
-@login_required
-def buy():
-    """Buy shares of stock"""
-    return apology("TODO")
-
-
 @app.route("/history")
 @login_required
 def history():
@@ -131,15 +124,15 @@ def register():
 
         # Ensure username was submitted.
         if not username:
-            apology("Please enter a Username to register.", 403)
+            return apology("Please enter a Username to register.", 403)
 
         # Ensure password was submitted.
         if not password:
-            apology("Please enter a Password to register.", 403)
+            return apology("Please enter a Password to register.", 403)
         
         # Ensure matching passwords were submitted.
         if password != confirm_password:
-            apology("Your passwords do not match.", 403)
+            return apology("Your passwords do not match.", 403)
 
         
         # Run a query to check if the username already exists.
@@ -170,12 +163,18 @@ def register():
 @app.route("/quote", methods=["GET", "POST"])
 @login_required
 def quote():
+    """Provides user with stock info"""
     if request.method == "POST":
         symbol = request.form.get("symbol")
+        
+        # Ensure symbol was submitted.
+        if not symbol:
+            return apology("Please enter a Symbol", 403)
+
         stock_info = lookup(symbol)
 
         if stock_info == None:
-            apology("Sorry, you entered an invalid symbol.", 403)
+            return apology("Sorry, you entered an invalid symbol.", 403)
         else:
             name = stock_info['name']
             price = usd(stock_info['price'])
@@ -186,6 +185,19 @@ def quote():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("quote.html")
+
+
+@app.route("/buy", methods=["GET", "POST"])
+@login_required
+def buy():
+    """Buy shares of stock"""
+    
+    if request.method == "POST":
+        pass
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("buy.html")
 
 
 @app.route("/sell", methods=["GET", "POST"])
