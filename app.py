@@ -1,6 +1,7 @@
 import os
 
 import sqlite3
+from datetime import datetime
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
@@ -191,9 +192,55 @@ def quote():
 @login_required
 def buy():
     """Buy shares of stock"""
-    
     if request.method == "POST":
-        pass
+        symbol = request.form.get("symbol")
+        stock_info = lookup(symbol)
+        shares = int(request.form.get("shares"))
+        total = shares * stock_info["price"]
+        user_id = session["user_id"]
+        time = datetime.now()
+        
+
+        # Ensure valid symbol was submitted
+        if not stock_info:
+            return apology("Please enter a valid symbol.", 403)
+
+        # Ensure valid number of shares was submitted
+        if not type(shares) is int or shares <= 0:
+            return apology("Number of shares must be a positive integer.", 403)
+
+        # Ensure the user has enough cash to complete the purchase
+        user_cash_query = """
+                          SELECT cash
+                          FROM users
+                          WHERE id=?
+                          """
+        c.execute(user_cash_query, (user_id,))
+        cash = c.fetchone()[0]
+
+        if cash < total:
+            return apology("Sorry, you do not have enough cash to make this purchase.")
+
+        # Record the purchase and 
+        record_purchase_query = """
+                                INSERT INTO purchases ('user_id', 'time', 'stock', 
+                                                       'shares', 'share value', 'total purchase value')
+                                VALUES (?, ?, ?, ?, ?, ?)
+                                """
+        c.execute(record_purchase_query, 
+                 (user_id, time, symbol.upper(), shares, stock_info["price"], total))
+        db.commit()
+        
+        # Update users account accordingly
+        update_users_account_query = """
+                                     UPDATE users
+                                     SET cash=?
+                                     WHERE id=?
+                                     """
+        c.execute(update_users_account_query, (cash-total, user_id))
+        db.commit()
+
+        return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
