@@ -34,7 +34,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure sqlite3 to use finance.db
-db = sqlite3.connect("finance.db")
+db = sqlite3.connect("finance.db", check_same_thread=False)
 db.row_factory = sqlite3.Row
 c = db.cursor()
 
@@ -74,24 +74,28 @@ def login():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
 
         # Ensure username was submitted
-        if not request.form.get("username"):
+        if not username:
             return apology("must provide username", 403)
 
         # Ensure password was submitted
-        elif not request.form.get("password"):
+        elif not password:
             return apology("must provide password", 403)
 
         # Query database for username
         query = """
-                "SELECT * FROM users WHERE username = ?"
+                SELECT * 
+                FROM `users` 
+                WHERE username = ?
                 """
-        c.execute(query, (request.form.get("username")))
+        c.execute(query, (username,))
         rows = c.fetchall()
 
         # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], password):
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
@@ -119,8 +123,46 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
+
     if request.method == "POST":
-        pass
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm-password")
+
+        # Ensure username was submitted.
+        if not username:
+            apology("Please enter a Username to register.", 403)
+
+        # Ensure password was submitted.
+        if not password:
+            apology("Please enter a Password to register.", 403)
+        
+        # Ensure matching passwords were submitted.
+        if password != confirm_password:
+            apology("Your passwords do not match.", 403)
+
+        
+        # Run a query to check if the username already exists.
+        query = """
+                SELECT * 
+                FROM users
+                WHERE username = ?
+                """
+        c.execute(query, (username,))
+        users = c.fetchall()
+        if len(users) != 0:
+            return apology("Sorry, this username is already taken.", 403)
+
+        # Insert username and hash of password into the users table in finance.db
+        insert_query = """
+                       INSERT INTO `users` (username, hash) VALUES (?, ?)
+                       """
+        c.execute(insert_query, (username, generate_password_hash(password)))
+        db.commit()
+
+        return redirect("/")
+    
+    # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
 
