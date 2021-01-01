@@ -48,8 +48,52 @@ if not os.environ.get("API_KEY"):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    
-    return apology("TODO")
+    user_id = session['user_id']
+
+    # Query finance.db for users current cash
+    cash_query = """
+                 SELECT cash
+                 FROM users
+                 WHERE id=?
+                 """
+    c.execute(cash_query, (user_id,))
+    cash = c.fetchone()[0]
+
+    # Query finance.db for users owned stocks
+    stocks_info_query = """
+                      SELECT stock, shares
+                      FROM purchases 
+                      WHERE user_id=?
+                      """
+    c.execute(stocks_info_query, (user_id, ))
+    stocks_info = c.fetchall()
+
+    # Create a list of dictionaries containing info on each stock the user owns 
+    portfolio = []
+    for stock in stocks_info:
+        stock_portfolio = {}
+        stock_info = lookup(stock['stock'])
+
+        # Store all info required for a stock in portfolio table in a dictionary
+        stock_portfolio['symbol'] = stock['stock']
+        stock_portfolio['name'] = stock_info['name']
+        stock_portfolio['share_count'] = stock['shares']
+        stock_portfolio['price'] = stock_info['price']
+        stock_portfolio['total'] =  stock_portfolio['share_count'] * stock_portfolio['price']
+
+        portfolio.append(stock_portfolio)
+
+    # Calculate user account net worth
+    total_wealth = cash
+    for stock_portfolio in portfolio:
+        total_wealth += stock_portfolio['total']
+
+    # Convert to USD
+    for stock in portfolio:
+        stock['total'] = usd(stock['total'])
+        stock['price'] = usd(stock['price'])      
+
+    return render_template("index.html", portfolio=portfolio, cash=usd(cash), total=usd(total_wealth))
 
 
 @app.route("/history")
