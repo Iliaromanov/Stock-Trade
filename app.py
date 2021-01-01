@@ -117,7 +117,6 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -252,7 +251,7 @@ def buy():
 def sell():
     """Sell shares of stock"""
     if request.method == "POST":
-        pass
+        return apology("TODO")
     
     # User reached route via GET (as by clicking a link or via redirect)
     else:
