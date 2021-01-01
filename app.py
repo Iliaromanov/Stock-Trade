@@ -251,8 +251,12 @@ def buy():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
-
+    if request.method == "POST":
+        pass
+    
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("sell.html")
 
 def errorhandler(e):
     """Handle error"""
@@ -264,6 +268,7 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
 
 if __name__ == "__main__":
     app.run()
