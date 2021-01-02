@@ -1,7 +1,0 @@
-sqlite
-Flask	
-Flask-Session	
-requests
-gunicorn
-Werkzeug
-urllib3
