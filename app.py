@@ -278,27 +278,28 @@ def buy():
         current_shares_query = """
                                SELECT shares
                                FROM ownedStocks
-                               WHERE user_id = ?
+                               WHERE user_id = ? AND stock = ?
                                """
-        c.execute(current_shares_query, (user_id, ))
-
+        c.execute(current_shares_query, (user_id, symbol.upper()))
+        result = c.fetchone()
+        print(result)
+        # The user already has some shares of the bought stock
+        if result != None:
+            current_shares = result[0]
+            update_owned_stocks_query = """
+                                        UPDATE ownedStocks
+                                        SET shares = ?
+                                        WHERE user_id = ? AND stock = ?
+                                        """
+            c.execute(update_owned_stocks_query, (current_shares + shares, user_id, symbol.upper()))
+            db.commit()
         # The user doesn't own any of the bought stock
-        if not c.fetchone():
+        else:
             update_owned_stocks_query = """
                                         INSERT INTO ownedStocks ('user_id', 'stock', 'shares')
                                         VALUES (?, ?, ?)
                                         """
             c.execute(update_owned_stocks_query, (user_id, symbol.upper(), shares))
-            db.commit()
-        # The user already has some shares of the bought stock
-        else:
-            current_shares = c.fetchone()[0]
-            update_owned_stocks_query = """
-                                        UPDATE ownedStocks
-                                        SET shares = ?
-                                        WHERE user_id = ?
-                                        """
-            c.execute(update_owned_stocks_query, (current_shares + shares, user_id))
             db.commit()
 
         # Update users account balance
