@@ -15,7 +15,7 @@
         </thead>
         <tfoot>
             <td colspan="4"></td>
-            <td>{{ total }}</td>
+            <td><b>{{ total }}</b></td>
         </tfoot>
         <tbody>
             {% for stock in portfolio %}
@@ -30,9 +30,9 @@
                 {% endif %}       
             {% endfor %}
             <tr>
-                <td>CASH</td>
+                <td><b>CASH</b></td>
                 <td colspan="3"></td>
-                <td>{{ cash }}</td>
+                <td><b>{{ cash }}</b></td>
             </tr>
         </tbody>
     </table>
