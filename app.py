@@ -62,8 +62,8 @@ def index():
     # Query finance.db for users owned stocks
     stocks_info_query = """
                       SELECT stock, shares
-                      FROM transactions 
-                      WHERE user_id = ? AND type='purchase'
+                      FROM ownedStocks 
+                      WHERE user_id = ?
                       """
     c.execute(stocks_info_query, (user_id, ))
     stocks_info = c.fetchall()
@@ -274,13 +274,40 @@ def buy():
                  (user_id, time, symbol.upper(), shares, stock_info["price"], total))
         db.commit()
         
-        # Update users account accordingly
-        update_users_account_query = """
+        # Update users owned-stocks
+        current_shares_query = """
+                               SELECT shares
+                               FROM ownedStocks
+                               WHERE user_id = ?
+                               """
+        c.execute(current_shares_query, (user_id, ))
+
+        # The user doesn't own any of the bought stock
+        if not c.fetchone():
+            update_owned_stocks_query = """
+                                        INSERT INTO ownedStocks ('user_id', 'stock', 'shares')
+                                        VALUES (?, ?, ?)
+                                        """
+            c.execute(update_owned_stocks_query, (user_id, symbol.upper(), shares))
+            db.commit()
+        # The user already has some shares of the bought stock
+        else:
+            current_shares = c.fetchone()[0]
+            update_owned_stocks_query = """
+                                        UPDATE ownedStocks
+                                        SET shares = ?
+                                        WHERE user_id = ?
+                                        """
+            c.execute(update_owned_stocks_query, (current_shares + shares, user_id))
+            db.commit()
+
+        # Update users account balance
+        update_account_balance_query = """
                                      UPDATE users
                                      SET cash = ?
                                      WHERE id = ?
                                      """
-        c.execute(update_users_account_query, (cash-total, user_id))
+        c.execute(update_account_balance_query, (cash-total, user_id))
         db.commit()
 
         return redirect("/")
@@ -294,12 +321,13 @@ def buy():
 @login_required
 def sell():
     """Sell shares of stock"""
+    user_id = session["user_id"]
+
     if request.method == "POST":
         symbol = request.form.get("symbol")
         stock_info = lookup(symbol)
         shares = int(request.form.get("shares"))
         total = shares * stock_info["price"]
-        user_id = session["user_id"]
         time = datetime.now()
 
         # Ensure valid symbol was submitted
@@ -312,6 +340,10 @@ def sell():
     
     # User reached route via GET (as by clicking a link or via redirect)
     else:
+        stock_options_query = """
+                              SELECT stock
+                              FROM transactions
+                              """
         return render_template("sell.html")
 
 def errorhandler(e):
