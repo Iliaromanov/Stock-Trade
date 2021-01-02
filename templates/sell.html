@@ -6,8 +6,11 @@
 <form action="/sell" method="post">
     <select class="form-control" name="symbol">
         <option disabled selected value>Symbol</option>
-        <!--Do jinja for loop for each symbol user has-->
+        {% for stock in stocks_owned.keys() %}
+            <option>{{ stock }}</option>
+        {% endfor %}
     </select>
+    <br/>
     <br/>
     <div class="form-group">
         <input autocomplete="off" autofocus class="form-control" name="shares" placeholder="Shares" type="number">

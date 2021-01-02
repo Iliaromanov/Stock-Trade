@@ -264,7 +264,7 @@ def buy():
         if cash < total:
             return apology("Sorry, you do not have enough cash to make this purchase.")
 
-        # Record the purchase and 
+        # Record the purchase 
         record_purchase_query = """
                                 INSERT INTO transactions ('user_id', 'time', 'stock', 'type',
                                                           'shares', 'share value', 'total value')
@@ -324,8 +324,22 @@ def sell():
     """Sell shares of stock"""
     user_id = session["user_id"]
 
+    # Query the database for the users owned stocks
+    stock_options_query = """
+                            SELECT stock, shares
+                            FROM ownedStocks
+                            WHERE user_id = ?
+                            """
+    c.execute(stock_options_query, (user_id, ))
+    result = c.fetchall()
+    # Save users owned stocks and share counts in a dictionary
+    stocks_owned = {}
+    for row in result:
+        stocks_owned[row['stock']] = row['shares']
+
+    # User has submitted form
     if request.method == "POST":
-        symbol = request.form.get("symbol")
+        symbol = request.form.get("symbol").upper()
         stock_info = lookup(symbol)
         shares = int(request.form.get("shares"))
         total = shares * stock_info["price"]
@@ -336,16 +350,49 @@ def sell():
             return apology("Please enter a valid symbol.", 403)
 
         # Ensure valid number of shares was submitted
-        if not type(shares) is int or shares <= 0:
-            return apology("Number of shares must be a positive integer.", 403)
-    
+        if not type(shares) is int or shares <= 0 or shares > stocks_owned[symbol]:
+            return apology("You do not own this number of shares.", 403)
+
+        # Update users owned stocks info
+        update_owned_stocks_query = """
+                                    UPDATE ownedStocks
+                                    SET shares = ?
+                                    WHERE user_id = ? AND stock = ?
+                                    """
+        c.execute(update_owned_stocks_query, (stocks_owned[symbol] - shares, user_id, symbol))
+        db.commit()
+
+        # Update users transactions info
+        update_transactions_query = """
+                                    INSERT INTO transactions ('user_id', 'time', 'stock', 'type',
+                                                            'shares', 'share value', 'total value')
+                                    VALUES (?, ?, ?, 'sale', ?, ?, ?)
+                                    """
+        c.execute(update_transactions_query, (user_id, time, symbol, shares, stock_info['price'], total))
+        db.commit()
+
+        # Get users current account balance
+        user_cash_query = """
+                          SELECT cash
+                          FROM users
+                          WHERE id = ?
+                          """
+        c.execute(user_cash_query, (user_id,))
+        cash = c.fetchone()[0]
+        # Update users account balance
+        update_user_cash_query = """
+                                 UPDATE users
+                                 SET cash = ?
+                                 WHERE id = ?
+                                 """
+        c.execute(update_user_cash_query, (cash + total, user_id))
+        db.commit()
+
+        return redirect("/")
+        
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        stock_options_query = """
-                              SELECT stock
-                              FROM transactions
-                              """
-        return render_template("sell.html")
+        return render_template("sell.html", stocks_owned=stocks_owned)
 
 def errorhandler(e):
     """Handle error"""
