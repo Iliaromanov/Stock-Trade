@@ -2,3 +2,4 @@ sqlite
 Flask	
 Flask-Session	
 requests
+gunicorn
