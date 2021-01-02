@@ -19,13 +19,15 @@
         </tfoot>
         <tbody>
             {% for stock in portfolio %}
-            <tr>
-                <td>{{ stock['symbol'] }}</td>
-                <td>{{ stock['name'] }}</td>
-                <td>{{ stock['share_count'] }}</td>
-                <td>{{ stock['price'] }}</td>
-                <td>{{ stock['total'] }}</td>
-            </tr>           
+                {% if stock['share_count'] != 0 %}
+                    <tr>
+                        <td>{{ stock['symbol'] }}</td>
+                        <td>{{ stock['name'] }}</td>
+                        <td>{{ stock['share_count'] }}</td>
+                        <td>{{ stock['price'] }}</td>
+                        <td>{{ stock['total'] }}</td>
+                    </tr>
+                {% endif %}       
             {% endfor %}
             <tr>
                 <td>CASH</td>
