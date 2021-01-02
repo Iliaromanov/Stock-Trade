@@ -404,7 +404,29 @@ def sell():
 @login_required
 def history():
     """Show history of transactions"""
-    return render_template("history.html")
+    user_id = session['user_id']
+
+    # Query database for users transaciton info
+    transaction_info_query = """
+                             SELECT stock, shares, total_value, time
+                             FROM transactions
+                             WHERE user_id = ?
+                             """
+    c.execute(transaction_info_query, (user_id, ))
+    result = c.fetchall()
+
+    # Convert price to USD and create  a list of transaction info dicts
+    transactions = []
+    for transaction in result:
+        transaction_info = {}
+        transaction_info['symbol'] = transaction['stock']
+        transaction_info['shares'] = transaction['shares']
+        transaction_info['price'] = usd(transaction['total_value'])
+        transaction_info['time'] = transaction['time']
+
+        transactions.append(transaction_info)
+
+    return render_template("history.html", transactions=transactions)
 
 
 def errorhandler(e):
