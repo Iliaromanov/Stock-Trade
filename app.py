@@ -54,7 +54,7 @@ def index():
     cash_query = """
                  SELECT cash
                  FROM users
-                 WHERE id=?
+                 WHERE id = ?
                  """
     c.execute(cash_query, (user_id,))
     cash = c.fetchone()[0]
@@ -62,8 +62,8 @@ def index():
     # Query finance.db for users owned stocks
     stocks_info_query = """
                       SELECT stock, shares
-                      FROM purchases 
-                      WHERE user_id=?
+                      FROM transactions 
+                      WHERE user_id = ? AND type='purchase'
                       """
     c.execute(stocks_info_query, (user_id, ))
     stocks_info = c.fetchall()
@@ -126,7 +126,7 @@ def login():
         # Query database for username
         query = """
                 SELECT * 
-                FROM `users` 
+                FROM users
                 WHERE username = ?
                 """
         c.execute(query, (username,))
@@ -256,7 +256,7 @@ def buy():
         user_cash_query = """
                           SELECT cash
                           FROM users
-                          WHERE id=?
+                          WHERE id = ?
                           """
         c.execute(user_cash_query, (user_id,))
         cash = c.fetchone()[0]
@@ -266,9 +266,9 @@ def buy():
 
         # Record the purchase and 
         record_purchase_query = """
-                                INSERT INTO purchases ('user_id', 'time', 'stock', 
-                                                       'shares', 'share value', 'total purchase value')
-                                VALUES (?, ?, ?, ?, ?, ?)
+                                INSERT INTO transactions ('user_id', 'time', 'stock', 'type',
+                                                          'shares', 'share value', 'total value')
+                                VALUES (?, ?, ?, 'purchase', ?, ?, ?)
                                 """
         c.execute(record_purchase_query, 
                  (user_id, time, symbol.upper(), shares, stock_info["price"], total))
@@ -277,8 +277,8 @@ def buy():
         # Update users account accordingly
         update_users_account_query = """
                                      UPDATE users
-                                     SET cash=?
-                                     WHERE id=?
+                                     SET cash = ?
+                                     WHERE id = ?
                                      """
         c.execute(update_users_account_query, (cash-total, user_id))
         db.commit()
@@ -295,7 +295,20 @@ def buy():
 def sell():
     """Sell shares of stock"""
     if request.method == "POST":
-        return apology("TODO")
+        symbol = request.form.get("symbol")
+        stock_info = lookup(symbol)
+        shares = int(request.form.get("shares"))
+        total = shares * stock_info["price"]
+        user_id = session["user_id"]
+        time = datetime.now()
+
+        # Ensure valid symbol was submitted
+        if not stock_info:
+            return apology("Please enter a valid symbol.", 403)
+
+        # Ensure valid number of shares was submitted
+        if not type(shares) is int or shares <= 0:
+            return apology("Number of shares must be a positive integer.", 403)
     
     # User reached route via GET (as by clicking a link or via redirect)
     else:
