@@ -96,13 +96,6 @@ def index():
     return render_template("index.html", portfolio=portfolio, cash=usd(cash), total=usd(total_wealth))
 
 
-@app.route("/history")
-@login_required
-def history():
-    """Show history of transactions"""
-    return apology("TODO")
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -125,7 +118,7 @@ def login():
 
         # Query database for username
         query = """
-                SELECT * 
+                SELECT *
                 FROM users
                 WHERE username = ?
                 """
@@ -192,10 +185,22 @@ def register():
 
         # Insert username and hash of password into the users table in finance.db
         insert_query = """
-                       INSERT INTO `users` (username, hash) VALUES (?, ?)
+                       INSERT INTO users (username, hash) VALUES (?, ?)
                        """
         c.execute(insert_query, (username, generate_password_hash(password)))
         db.commit()
+
+        # Query database for username
+        query = """
+                SELECT *
+                FROM users
+                WHERE username = ?
+                """
+        c.execute(query, (username,))
+        user = c.fetchone()
+
+        # Remember which user has logged in
+        session["user_id"] = user[0]
 
         return redirect("/")
     
@@ -266,9 +271,9 @@ def buy():
 
         # Record the purchase 
         record_purchase_query = """
-                                INSERT INTO transactions ('user_id', 'time', 'stock', 'type',
+                                INSERT INTO transactions ('user_id', 'time', 'stock',
                                                           'shares', 'share value', 'total value')
-                                VALUES (?, ?, ?, 'purchase', ?, ?, ?)
+                                VALUES (?, ?, ?, ?, ?, ?)
                                 """
         c.execute(record_purchase_query, 
                  (user_id, time, symbol.upper(), shares, stock_info["price"], total))
@@ -364,11 +369,11 @@ def sell():
 
         # Update users transactions info
         update_transactions_query = """
-                                    INSERT INTO transactions ('user_id', 'time', 'stock', 'type',
-                                                            'shares', 'share value', 'total value')
-                                    VALUES (?, ?, ?, 'sale', ?, ?, ?)
+                                    INSERT INTO transactions ('user_id', 'time', 'stock',
+                                                              'shares', 'share value', 'total value')
+                                    VALUES (?, ?, ?, ?, ?, ?)
                                     """
-        c.execute(update_transactions_query, (user_id, time, symbol, shares, stock_info['price'], total))
+        c.execute(update_transactions_query, (user_id, time, symbol, -1*shares, stock_info['price'], total))
         db.commit()
 
         # Get users current account balance
@@ -393,6 +398,14 @@ def sell():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("sell.html", stocks_owned=stocks_owned)
+
+
+@app.route("/history")
+@login_required
+def history():
+    """Show history of transactions"""
+    return render_template("history.html")
+
 
 def errorhandler(e):
     """Handle error"""
