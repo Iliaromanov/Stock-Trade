@@ -35,7 +35,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure sqlite3 to use finance.db
-db = sqlite3.connect("finance.db", check_same_thread=False)
+db = sqlite3.connect("finance.sqlite", check_same_thread=False)
 db.row_factory = sqlite3.Row
 c = db.cursor()
 
@@ -272,7 +272,7 @@ def buy():
         # Record the purchase 
         record_purchase_query = """
                                 INSERT INTO transactions ('user_id', 'time', 'stock',
-                                                          'shares', 'share value', 'total value')
+                                                          'shares', 'share_value', 'total_value')
                                 VALUES (?, ?, ?, ?, ?, ?)
                                 """
         c.execute(record_purchase_query, 
@@ -287,7 +287,7 @@ def buy():
                                """
         c.execute(current_shares_query, (user_id, symbol.upper()))
         result = c.fetchone()
-        print(result)
+
         # The user already has some shares of the bought stock
         if result != None:
             current_shares = result[0]
@@ -370,7 +370,7 @@ def sell():
         # Update users transactions info
         update_transactions_query = """
                                     INSERT INTO transactions ('user_id', 'time', 'stock',
-                                                              'shares', 'share value', 'total value')
+                                                              'shares', 'share_value', 'total_value')
                                     VALUES (?, ?, ?, ?, ?, ?)
                                     """
         c.execute(update_transactions_query, (user_id, time, symbol, -1*shares, stock_info['price'], total))
