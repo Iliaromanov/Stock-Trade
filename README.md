@@ -1,5 +1,5 @@
 # Stock-Trade
-A web application that allows users to log in or register and then simulate buying and selling stocks by querying IEX for stock prices. 
+A stock trading simulator web application via which users can buy and sell stocks with real time prices from the IEX stock exchange. 
 
 - Dynamic HTML delivered using the Flask Python web framework.
 - Fully functioning user login system utilizing an SQLite database.
