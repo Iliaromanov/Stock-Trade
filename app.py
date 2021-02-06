@@ -1,6 +1,8 @@
 import os
 
 import sqlite3
+import psycopg2
+import psycopg2.extras
 from datetime import datetime
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
@@ -34,11 +36,20 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+DB_NAME = "dmqapxrs5yvkfbpcecojoit"
+DB_HOST = "ec2-3-90-70-174.compute-1.amazonaws.com"
+DB_USER = "ukj26a2udwi5"
+DB_PASS = "puovih1p0cp4rhy78j1vkqv1tjh78jhss"
+
+db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+'''
 # Configure sqlite3 to use finance.db
 db = sqlite3.connect("finance.sqlite", check_same_thread=False)
 db.row_factory = sqlite3.Row
 c = db.cursor()
-
+'''
 # Make sure API key is set
 #if not os.environ.get("API_KEY"):
 #    raise RuntimeError("API_KEY not set")
