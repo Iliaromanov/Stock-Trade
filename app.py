@@ -47,6 +47,7 @@ DB_PASS = "puovih1p0cp4rhy78j1vkqv1tjh78jhss"
 db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
+
 '''
 # Configure sqlite3 to use finance.db
 db = sqlite3.connect("finance.sqlite", check_same_thread=False)
