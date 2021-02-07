@@ -38,14 +38,13 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Temporary fix for testing (will use env variables later)
-DB_NAME = "dmqapxrs5yvkfbpcecojoit"
+DB_NAME = "dumhkhypnfu8lue7fezemvr"
 DB_HOST = "ec2-3-90-70-174.compute-1.amazonaws.com"
-DB_USER = "ukj26a2udwi5"
-DB_PASS = "puovih1p0cp4rhy78j1vkqv1tjh78jhss"
+DB_USER = "uvha7jrpm1uy"
+DB_PASS = "pt25wvak9nn45hgr08c7f68dp3r52e09k"
 
 db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-
 
 '''
 # Configure sqlite3 to use finance.db
@@ -145,7 +144,8 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
-
+        print(session['user_id'])
+        print("^^USER ID HERE^^")
         # Redirect user to home page
         return redirect("/")
 
@@ -285,8 +285,8 @@ def buy():
 
         # Record the purchase 
         record_purchase_query = SQL("""
-                                    INSERT INTO transactions ('user_id', 'time', 'stock',
-                                                            'shares', 'share_value', 'total_value')
+                                    INSERT INTO transactions (user_id, time, stock,
+                                                              shares, share_value, total_value)
                                     VALUES (%s, %s, %s, %s, %s, %s)
                                     """)
         c.execute(record_purchase_query, 
@@ -315,7 +315,7 @@ def buy():
         # The user doesn't own any of the bought stock
         else:
             update_owned_stocks_query = SQL("""
-                                            INSERT INTO ownedStocks ('user_id', 'stock', 'shares')
+                                            INSERT INTO ownedStocks (user_id, stock, shares)
                                             VALUES (%s, %s, %s)
                                             """)
             c.execute(update_owned_stocks_query, (user_id, symbol.upper(), shares))
@@ -383,8 +383,8 @@ def sell():
 
         # Update users transactions info
         update_transactions_query = SQL("""
-                                        INSERT INTO transactions ('user_id', 'time', 'stock',
-                                                                  'shares', 'share_value', 'total_value')
+                                        INSERT INTO transactions (user_id, time, stock,
+                                                                  shares, share_value, total_value)
                                         VALUES (%s, %s, %s, %s, %s, %s)
                                         """)
         c.execute(update_transactions_query, (user_id, time, symbol, -1*shares, stock_info['price'], total))
