@@ -37,6 +37,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# Temporary fix for testing (will use env variables later)
 DB_NAME = "dmqapxrs5yvkfbpcecojoit"
 DB_HOST = "ec2-3-90-70-174.compute-1.amazonaws.com"
 DB_USER = "ukj26a2udwi5"
@@ -73,10 +74,10 @@ def index():
 
     # Query finance.db for users owned stocks
     stocks_info_query = """
-                      SELECT stock, shares
-                      FROM ownedStocks 
-                      WHERE user_id = ?
-                      """
+                        SELECT stock, shares
+                        FROM ownedStocks 
+                        WHERE user_id = ?
+                        """
     c.execute(stocks_info_query, (user_id, ))
     stocks_info = c.fetchall()
 
