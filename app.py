@@ -10,6 +10,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required, lookup, usd
+from config import DB_HOST, DB_NAME, DB_PASS, DB_USER
 
 # Configure application
 app = Flask(__name__)
@@ -37,11 +38,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Temporary fix for testing (will use env variables later)
-DB_NAME = "dumhkhypnfu8lue7fezemvr"
-DB_HOST = "ec2-3-90-70-174.compute-1.amazonaws.com"
-DB_USER = "uvha7jrpm1uy"
-DB_PASS = "pt25wvak9nn45hgr08c7f68dp3r52e09k"
 
 db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -64,20 +60,20 @@ def index():
     user_id = session['user_id']
 
     # Query finance.db for users current cash
-    cash_query = SQL("""
-                     SELECT cash
-                     FROM users
-                     WHERE id = %s
-                     """)
+    cash_query = """
+                 SELECT cash
+                 FROM users
+                 WHERE dropbase_id = %s
+                 """
     c.execute(cash_query, (user_id,))
     cash = c.fetchone()[0]
 
     # Query finance.db for users owned stocks
-    stocks_info_query = SQL("""
-                            SELECT stock, shares
-                            FROM ownedStocks 
-                            WHERE user_id = %s
-                            """)
+    stocks_info_query = """
+                        SELECT stock, shares
+                        FROM ownedstocks 
+                        WHERE user_id = %s
+                        """
     c.execute(stocks_info_query, (user_id, ))
     stocks_info = c.fetchall()
 
@@ -105,7 +101,7 @@ def index():
     for stock in portfolio:
         stock['total'] = usd(stock['total'])
         stock['price'] = usd(stock['price'])      
-
+    print(f"type: {type(cash)}, val: {cash}")
     return render_template("index.html", portfolio=portfolio, cash=usd(cash), total=usd(total_wealth))
 
 
@@ -143,7 +139,7 @@ def login():
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0]["dropbase_id"]
         print(session['user_id'])
         print("^^USER ID HERE^^")
         # Redirect user to home page
@@ -199,9 +195,10 @@ def register():
 
         # Insert username and hash of password into the users table in finance.db
         insert_query = psycopg2.sql.SQL("""
-                                        INSERT INTO users (username, hash) VALUES (%s, %s)
+                                        INSERT INTO users (username, hash, cash) VALUES (%s, %s, %s)
                                         """)
-        c.execute(insert_query, (username, generate_password_hash(password)))
+        start_cash = 10000
+        c.execute(insert_query, (username, generate_password_hash(password), start_cash))
         db.commit()
 
         # Query database for username
@@ -214,7 +211,7 @@ def register():
         user = c.fetchone()
 
         # Remember which user has logged in
-        session["user_id"] = user[0]
+        session["user_id"] = user['dropbase_id']
 
         return redirect("/")
     
@@ -275,7 +272,7 @@ def buy():
         user_cash_query = psycopg2.sql.SQL("""
                                            SELECT cash
                                            FROM users
-                                           WHERE id = %s
+                                           WHERE dropbase_id = %s
                                            """)
         c.execute(user_cash_query, (user_id,))
         cash = c.fetchone()[0]
@@ -325,7 +322,7 @@ def buy():
         update_account_balance_query = SQL("""
                                            UPDATE users
                                            SET cash = %s
-                                           WHERE id = %s
+                                           WHERE dropbase_id = %s
                                            """)
         c.execute(update_account_balance_query, (cash-total, user_id))
         db.commit()
@@ -394,7 +391,7 @@ def sell():
         user_cash_query = SQL("""
                               SELECT cash
                               FROM users
-                              WHERE id = %s
+                              WHERE dropbase_id = %s
                               """)
         c.execute(user_cash_query, (user_id,))
         cash = c.fetchone()[0]
@@ -402,7 +399,7 @@ def sell():
         update_user_cash_query = SQL("""
                                      UPDATE users
                                      SET cash = %s
-                                     WHERE id = %s
+                                     WHERE dropbase_id = %s
                                      """)
         c.execute(update_user_cash_query, (cash + total, user_id))
         db.commit()
