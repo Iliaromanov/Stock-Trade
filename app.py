@@ -39,9 +39,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
-db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
-c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-db.reset()
+'''db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)'''
 
 '''
 # Configure sqlite3 to use finance.db
@@ -57,6 +56,8 @@ c = db.cursor()
 @app.route("/")
 @login_required
 def index():
+    db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     """Show portfolio of stocks"""
     user_id = session['user_id']
 
@@ -103,6 +104,8 @@ def index():
         stock['total'] = usd(stock['total'])
         stock['price'] = usd(stock['price'])      
     print(f"type: {type(cash)}, val: {cash}")
+    db.close()
+    c.close()
     return render_template("index.html", portfolio=portfolio, cash=usd(cash), total=usd(total_wealth))
 
 
@@ -112,7 +115,8 @@ def login():
 
     # Forget any user_id
     session.clear()
-
+    db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         username = request.form.get("username")
@@ -144,6 +148,8 @@ def login():
         print(session['user_id'])
         print("^^USER ID HERE^^")
         # Redirect user to home page
+        db.close()
+        c.close()
         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
@@ -165,6 +171,8 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
+    db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -213,6 +221,8 @@ def register():
 
         # Remember which user has logged in
         session["user_id"] = user['dropbase_id']
+        db.close()
+        c.close()
 
         return redirect("/")
     
@@ -225,6 +235,7 @@ def register():
 @login_required
 def quote():
     """Provides user with stock info"""
+
     if request.method == "POST":
         symbol = request.form.get("symbol")
         
@@ -242,7 +253,7 @@ def quote():
             symbol = stock_info['symbol']
 
             return render_template("quoted.html", name=name, price=price, symbol=symbol)
-
+        
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("quote.html")
@@ -252,6 +263,8 @@ def quote():
 @login_required
 def buy():
     """Buy shares of stock"""
+    db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     if request.method == "POST":
         symbol = request.form.get("symbol")
         stock_info = lookup(symbol)
@@ -328,6 +341,8 @@ def buy():
         c.execute(update_account_balance_query, (cash-total, user_id))
         db.commit()
 
+        db.close()
+        c.close()
         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
@@ -339,6 +354,8 @@ def buy():
 @login_required
 def sell():
     """Sell shares of stock"""
+    db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     user_id = session["user_id"]
 
     # Query the database for the users owned stocks
@@ -405,6 +422,8 @@ def sell():
         c.execute(update_user_cash_query, (cash + total, user_id))
         db.commit()
 
+        db.close()
+        c.close()
         return redirect("/")
         
     # User reached route via GET (as by clicking a link or via redirect)
@@ -416,6 +435,8 @@ def sell():
 @login_required
 def history():
     """Show history of transactions"""
+    db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     user_id = session['user_id']
 
     # Query database for users transaciton info
@@ -437,7 +458,8 @@ def history():
         transaction_info['time'] = transaction['time']
 
         transactions.append(transaction_info)
-
+    db.close()
+    c.close()
     return render_template("history.html", transactions=transactions)
 
 
