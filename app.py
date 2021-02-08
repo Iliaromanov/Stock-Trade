@@ -41,6 +41,7 @@ Session(app)
 
 db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
 c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+db.reset()
 
 '''
 # Configure sqlite3 to use finance.db
