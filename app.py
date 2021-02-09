@@ -396,6 +396,15 @@ def sell():
         c.execute(update_owned_stocks_query, (stocks_owned[symbol] - shares, user_id, symbol))
         db.commit()
 
+        # Remove stocks from ownedStocks table if their qty is at 0
+        if stocks_owned[symbol] - shares == 0:
+            clean_owned_stocks_query = SQL("""
+                                           DELETE FROM ownedStocks
+                                           WHERE shares = 0
+                                           """)
+            c.execute(clean_owned_stocks_query)
+            db.commit()
+
         # Update users transactions info
         update_transactions_query = SQL("""
                                         INSERT INTO transactions (user_id, time, stock,
