@@ -3,7 +3,7 @@ import os
 import psycopg2, psycopg2.extras, psycopg2.sql
 from psycopg2.sql import SQL
 from datetime import datetime
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session, flash
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -150,6 +150,8 @@ def login():
         # Redirect user to home page
         db.close()
         c.close()
+
+        flash(f'Welcome back, {username}!')
         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)

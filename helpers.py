@@ -24,6 +24,7 @@ def lookup(symbol):
     """Look up quote for symbol."""
 
     # Contact API
+    # pk_416fe4a246914cb594e7deeda6251bf5
     try:
         api_key = os.environ.get("API_KEY")
         response = requests.get(f"https://cloud-sse.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}")

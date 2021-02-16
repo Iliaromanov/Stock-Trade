@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+
+
 
 # Temporary fix for demo (will use env variables later)
 DB_NAME = "ddbsl7wcmixccheyip3odvh"
