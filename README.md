@@ -3,7 +3,7 @@ A stock trading simulator web application via which users can buy and sell stock
 
 - Dynamic HTML delivered using the Flask Python web framework.
 - Fully functioning user login system utilizing a PostgreSQL Database.
-- Provides users with real-time, up to date stock prices by querying the IEX stock exchange.
+- Provides users with real-time, up to date stock prices by querying the IEX stock exchange using the IEX Cloud REST API.
 
 Visit and use the app here:
 https://ilia-stock-trade.herokuapp.com/
