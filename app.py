@@ -1,3 +1,4 @@
+from config import DB_NAME, DB_PASS
 import os
 
 import psycopg2, psycopg2.extras, psycopg2.sql
@@ -10,7 +11,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required, lookup, usd
-from config import DB_HOST, DB_NAME, DB_PASS, DB_USER
+
 
 # Configure application
 app = Flask(__name__)
@@ -28,30 +29,17 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-# VV alternative to doing round(value, 2) when working with currencies.
-# Custom filter
-# app.jinja_env.filters["usd"] = usd
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
-'''db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
-c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)'''
-
-'''
-# Configure sqlite3 to use finance.db
-db = sqlite3.connect("finance.sqlite", check_same_thread=False)
-db.row_factory = sqlite3.Row
-c = db.cursor()
-'''
-# Make sure API key is set
-#if not os.environ.get("API_KEY"):
-#    raise RuntimeError("API_KEY not set")
-
+# Get database credentials saved in Heroku env
+DB_NAME = os.environ.get("DB_NAME")
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
+DB_HOST = os.environ.get("DB_HOST")
 
 @app.route("/")
 @login_required
