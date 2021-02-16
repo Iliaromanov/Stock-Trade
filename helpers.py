@@ -15,7 +15,6 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get("user_id") is None:
-            print("NO USER ID IN SESSION")
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
@@ -26,8 +25,8 @@ def lookup(symbol):
 
     # Contact API
     try:
-        #api_key = os.environ.get("API_KEY")
-        response = requests.get(f"https://cloud-sse.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token=pk_416fe4a246914cb594e7deeda6251bf5")
+        api_key = os.environ.get("API_KEY")
+        response = requests.get(f"https://cloud-sse.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}")
         response.raise_for_status()
     except requests.RequestException:
         return None
