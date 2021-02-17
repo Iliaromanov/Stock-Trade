@@ -19,10 +19,15 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def percent(value: float) -> str:
-    """Formats float value to percent"""
-    return f"%{value:,.2f}"
-
+def percent(value: float) -> tuple:
+    """Formats float value to percent and denotes colour of value in table"""
+    rounded = round(100 * value, 3)
+    if rounded < 0:
+        return ("red", f"-%{-1*rounded}")
+    elif rounded == 0.0:
+        return ("grey", "%0.00")
+    else:
+        return ("green", f"%{rounded}")
 
 def usd(value: float) -> str:
     """Format value as USD."""

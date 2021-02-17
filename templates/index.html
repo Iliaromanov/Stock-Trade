@@ -26,7 +26,13 @@
                         <td>{{ stock['symbol'] }}</td>
                         <td>{{ stock['name'] }}</td>
                         <td>{{ stock['share_count'] }}</td>
-                        <td>{{ stock['percent'] }}</td>
+                        {% if stock['percent'][0] == "green" %}
+                            <td style="color: green;">{{ stock['percent'][1] }}</td>
+                        {% elif stock['percent'][0] == "red" %}
+                            <td style="color: red;">{{ stock['percent'][1] }}</td>
+                        {% else %}
+                            <td style="color: rgb(71, 69, 69);">{{ stock['percent'][1] }}</td>
+                        {% endif %}
                         <td>{{ stock['price'] }}</td>
                         <td>{{ stock['total'] }}</td>
                     </tr>

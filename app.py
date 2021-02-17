@@ -9,7 +9,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, lookup, percent, usd
 
 
 # Configure application
@@ -81,7 +81,7 @@ def index():
         stock_portfolio['percent'] = stock_info['percent']
         stock_portfolio['price'] = stock_info['price']
         stock_portfolio['total'] =  stock_portfolio['share_count'] * stock_portfolio['price']
-
+        
         portfolio.append(stock_portfolio)
 
     # Calculate user account net worth
