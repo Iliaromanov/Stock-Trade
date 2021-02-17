@@ -48,7 +48,9 @@ def index():
     """Show portfolio of stocks"""
     user_id = session['user_id']
 
-    # Query finance.db for users current cash
+
+    
+    # Query db for users current cash
     cash_query = """
                  SELECT cash
                  FROM users
@@ -57,7 +59,7 @@ def index():
     c.execute(cash_query, (user_id,))
     cash = c.fetchone()[0]
 
-    # Query finance.db for users owned stocks
+    # Query db for users owned stocks
     stocks_info_query = """
                         SELECT stock, shares
                         FROM ownedstocks 
@@ -76,6 +78,7 @@ def index():
         stock_portfolio['symbol'] = stock['stock']
         stock_portfolio['name'] = stock_info['name']
         stock_portfolio['share_count'] = stock['shares']
+        stock_portfolio['percent'] = stock_info['percent']
         stock_portfolio['price'] = stock_info['price']
         stock_portfolio['total'] =  stock_portfolio['share_count'] * stock_portfolio['price']
 
