@@ -19,12 +19,20 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def percent(value: float) -> str:
+    """Formats float value to percent"""
+    return f"%{value:,.2f}"
 
-def lookup(symbol):
+
+def usd(value: float) -> str:
+    """Format value as USD."""
+    return f"${value:,.2f}"
+
+
+def lookup(symbol: str) -> dict:
     """Look up quote for symbol."""
 
     # Contact API
-    # pk_416fe4a246914cb594e7deeda6251bf5
     try:
         api_key = os.environ.get("API_KEY")
         response = requests.get(f"https://cloud-sse.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}")
@@ -38,18 +46,14 @@ def lookup(symbol):
         return {
             "name": quote["companyName"],
             "price": float(quote["latestPrice"]),
-            "symbol": quote["symbol"]
+            "symbol": quote["symbol"],
+            "percent": percent(float(quote["changePercent"]))
         }
     except (KeyError, TypeError, ValueError):
         return None
 
 
-def usd(value):
-    """Format value as USD."""
-    return f"${value:,.2f}"
-
-
-def apology(message, code=400):
+def apology(message: str, code=400):
     """Render message as an apology to user."""
     def escape(s):
         """

@@ -1,4 +1,3 @@
-from config import DB_NAME, DB_PASS
 import os
 
 import psycopg2, psycopg2.extras, psycopg2.sql
@@ -256,21 +255,25 @@ def buy():
     db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
     c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     if request.method == "POST":
-        symbol = request.form.get("symbol")
-        stock_info = lookup(symbol)
-        shares = int(request.form.get("shares"))
-        total = shares * stock_info["price"]
         user_id = session["user_id"]
         time = datetime.now()
+        symbol = request.form.get("symbol")
+        stock_info = lookup(symbol)
+        shares = request.form.get("shares")
+
+        # Ensure valid number of shares was submitted
+        if not shares or int(shares) <= 0:
+            flash("Number of shares must be a positive integer", "error")
+            return apology("Number of shares must be a positive integer.", 403)
+        else:
+            shares = int(shares)
+
+        total = shares * stock_info["price"]
         
 
         # Ensure valid symbol was submitted
         if not stock_info:
             return apology("Please enter a valid symbol.", 403)
-
-        # Ensure valid number of shares was submitted
-        if not type(shares) is int or shares <= 0:
-            return apology("Number of shares must be a positive integer.", 403)
 
         # Ensure the user has enough cash to complete the purchase
         user_cash_query = psycopg2.sql.SQL("""
@@ -443,6 +446,7 @@ def history():
                                  SELECT stock, shares, total_value, time
                                  FROM transactions
                                  WHERE user_id = %s
+                                 ORDER BY time DESC
                                  """)
     c.execute(transaction_info_query, (user_id, ))
     result = c.fetchall()
