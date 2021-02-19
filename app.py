@@ -64,6 +64,7 @@ def index():
                         SELECT stock, shares
                         FROM ownedstocks 
                         WHERE user_id = %s
+                        ORDER BY shares DESC
                         """
     c.execute(stocks_info_query, (user_id, ))
     stocks_info = c.fetchall()
