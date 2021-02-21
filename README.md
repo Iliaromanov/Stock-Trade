@@ -1,6 +1,8 @@
 
 <img src="demo/Logo.png" alt="$tock Trade" style="text-align: center" />
 <!--# Stock-Trade-->
+![Python](https://img.shields.io/badge/-Python-yellow) ![Flask](https://img.shields.io/badge/-Flask-green) ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange) ![IEX Cloud API](https://img.shields.io/badge/-"IEX Cloud API"-blue)
+
 A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange. 
 
 
