@@ -1,7 +1,7 @@
 
 <img src="demo/Logo.png" alt="$tock Trade" style="text-align: center" />
 <!--# Stock-Trade-->
-![Python](https://img.shields.io/badge/-Python-yellow) ![Flask](https://img.shields.io/badge/-Flask-green) ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange) ![IEX Cloud API](https://img.shields.io/badge/-"IEX Cloud API"-blue)
+![Python](https://img.shields.io/badge/-Python-yellow) ![Flask](https://img.shields.io/badge/-Flask-green) ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange)
 
 A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange. 
 
@@ -11,5 +11,5 @@ A stock trading simulator web app via which users can buy and sell stocks with r
 - Dynamic HTML delivered using the Python Flask web framework and Jinja templating engine.
 
 
-Visit and use the app here:
+Access $tock Trade [Here](https://ilia-stock-trade.herokuapp.com/):
 https://ilia-stock-trade.herokuapp.com/
