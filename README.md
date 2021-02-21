@@ -15,5 +15,5 @@ A stock trading simulator web app via which users can buy and sell stocks with r
 - Dynamic HTML delivered using the Python Flask web framework and Jinja templating engine.
 
 
-
+Made with ❤ by [Ilia](https://github.com/Iliaromanov) 😁
 <!--https://ilia-stock-trade.herokuapp.com/-->
