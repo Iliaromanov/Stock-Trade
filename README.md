@@ -4,9 +4,12 @@
 
 
 ## 💡 Introduction
-A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange. Access $tock Trade [here](https://ilia-stock-trade.herokuapp.com/) !
+A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange. 
 
-[Python](https://img.shields.io/badge/-Python-yellow) [Flask](https://img.shields.io/badge/-Flask-green) [PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange)
+Check out $tock Trade [here](https://ilia-stock-trade.herokuapp.com/) !
+
+<img src="https://img.shields.io/badge/-Python-blue" /> <img src="https://img.shields.io/badge/-Flask-green" /> <img src="https://img.shields.io/badge/-PostgreSQL-red" />
+<!--[Python](https://img.shields.io/badge/-Python-yellow) [Flask](https://img.shields.io/badge/-Flask-green) [PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange)-->
 
 - Intuitive interface that allows users to view their stock portfolios and transaction history.
 - Fully functioning user account system utilizing a PostgreSQL database.
