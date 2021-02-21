@@ -1,4 +1,6 @@
-# Stock-Trade
+
+<img src="demo/logo.png" width="400" height="350" style="text-align: center" />
+<!--# Stock-Trade-->
 A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange. 
 
 
