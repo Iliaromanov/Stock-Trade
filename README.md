@@ -11,7 +11,7 @@ A stock trading simulator web app via which users can buy and sell stocks with r
 
 ## ✨ Features
 - Intuitive interface that allows users to view their stock portfolios and transaction history.
-- Fully functioning user account system utilizing a PostgreSQL database and Flask Session.
+- Fully functioning user account system utilizing a PostgreSQL database and Flask sessions.
 - Dynamic HTML delivered using the Python Flask web framework and Jinja templating engine.
 
 
