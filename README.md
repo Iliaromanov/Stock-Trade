@@ -12,8 +12,8 @@ A stock trading simulator web app via which users can buy and sell stocks with r
 ## ✨ Features
 - Intuitive interface that allows users to view their stock portfolios and transaction history.
 - Fully functioning user account system utilizing a PostgreSQL database and Flask sessions.
-- Dynamic HTML delivered using the Python Flask web framework and Jinja templating engine.
+- Real time stock prices obtained using the IEX stock exchange API.
 
 
-Made with ❤ by [Ilia](https://github.com/Iliaromanov) 😁
-<!--https://ilia-stock-trade.herokuapp.com/-->
+<!--Made with ❤ by [Ilia](https://github.com/Iliaromanov) 😁
+https://ilia-stock-trade.herokuapp.com/-->
