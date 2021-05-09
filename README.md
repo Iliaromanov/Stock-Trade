@@ -14,6 +14,15 @@ A stock trading simulator web app via which users can buy and sell stocks with r
 - Fully functioning user account system utilizing a PostgreSQL database and Flask sessions.
 - Real time stock prices obtained using the IEX stock exchange API.
 
+## ⚙ Installation (Not Required)
+
+1. `git clone https://github.com/Iliaromanov/Stock-Trade.git`
+
+2. `cd Stock-Trade`
+
+3. `pip install -r requirements.txt`
+
+4. `python app.py`
 
 <!--Made with ❤ by [Ilia](https://github.com/Iliaromanov) 😁
 https://ilia-stock-trade.herokuapp.com/-->
