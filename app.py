@@ -28,7 +28,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-# Configure session to use filesystem (instead of signed cookies)
+# Configure session to use filesystem instead of signed cookies. (this is done to avoid having to set a secret key for the app)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
