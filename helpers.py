@@ -43,7 +43,7 @@ def lookup(symbol: str) -> dict:
         response = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}")
         response.raise_for_status()
     except requests.RequestException:
-        flash("IEX is currently under maintenance. Sorry for the inconvenience", "error")
+        # flash("IEX is currently under maintenance. Sorry for the inconvenience", "error")
         return None
 
     # Parse response

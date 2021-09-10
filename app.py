@@ -47,8 +47,6 @@ def index():
     c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     """Show portfolio of stocks"""
     user_id = session['user_id']
-
-
     
     # Query db for users current cash
     cash_query = """
@@ -71,6 +69,7 @@ def index():
 
     # Create a list of dictionaries containing info on each stock the user owns 
     portfolio = []
+
     for stock in stocks_info:
         stock_portfolio = {}
         stock_info = lookup(stock['stock'])
@@ -263,6 +262,9 @@ def buy():
         time = datetime.now()
         symbol = request.form.get("symbol")
         stock_info = lookup(symbol)
+        if not stock_info:
+            return apology("Please enter a valid symbol", 403)
+
         shares = request.form.get("shares")
 
         # Ensure valid number of shares was submitted
@@ -273,11 +275,6 @@ def buy():
             shares = int(shares)
 
         total = shares * stock_info["price"]
-        
-
-        # Ensure valid symbol was submitted
-        if not stock_info:
-            return apology("Please enter a valid symbol.", 403)
 
         # Ensure the user has enough cash to complete the purchase
         user_cash_query = psycopg2.sql.SQL("""
@@ -297,8 +294,10 @@ def buy():
                                                               shares, share_value, total_value)
                                     VALUES (%s, %s, %s, %s, %s, %s)
                                     """)
-        c.execute(record_purchase_query, 
-                 (user_id, time, symbol.upper(), shares, stock_info["price"], total))
+        c.execute(
+            record_purchase_query,
+            (user_id, time, symbol.upper(), shares, stock_info["price"], total)
+        )
         db.commit()
         
         # Update users owned-stocks
