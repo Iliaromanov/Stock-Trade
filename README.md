@@ -7,10 +7,11 @@
 <img src="https://img.shields.io/badge/-Python-blue" /> <img src="https://img.shields.io/badge/-Flask-green" /> <img src="https://img.shields.io/badge/-PostgreSQL-red" /> <img src="https://img.shields.io/badge/-IEX_Cloud_API-orange" /> <img src="https://img.shields.io/badge/-HTML5-yellow" /> <img src="https://img.shields.io/badge/-CSS-purple" />
 <!--[Python](https://img.shields.io/badge/-Python-yellow) [Flask](https://img.shields.io/badge/-Flask-green) [PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange)-->
 
-## <!--✨--> Features
+<!--## ✨ Features
 - Intuitive interface that allows users to view their stock portfolios and transaction history.
 - Fully functioning user account system utilizing a PostgreSQL database and Flask sessions.
 - Real time stock prices obtained using the IEX stock exchange API.
+-->
 
 ## <!--⚙--> Installation 
 
