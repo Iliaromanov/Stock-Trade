@@ -52,7 +52,7 @@ def index():
     cash_query = """
                  SELECT cash
                  FROM users
-                 WHERE dropbase_id = %s
+                 WHERE id = %s
                  """
     c.execute(cash_query, (user_id,))
     cash = c.fetchone()[0]
@@ -134,7 +134,7 @@ def login():
             return apology("invalid username and/or password", 403)
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["dropbase_id"]
+        session["user_id"] = rows[0]["id"]
         print(session['user_id'])
         print("^^USER ID HERE^^")
         # Redirect user to home page
@@ -212,7 +212,7 @@ def register():
         user = c.fetchone()
 
         # Remember which user has logged in
-        session["user_id"] = user['dropbase_id']
+        session["user_id"] = user['id']
         db.close()
         c.close()
 
@@ -280,7 +280,7 @@ def buy():
         user_cash_query = psycopg2.sql.SQL("""
                                            SELECT cash
                                            FROM users
-                                           WHERE dropbase_id = %s
+                                           WHERE id = %s
                                            """)
         c.execute(user_cash_query, (user_id,))
         cash = c.fetchone()[0]
@@ -332,7 +332,7 @@ def buy():
         update_account_balance_query = SQL("""
                                            UPDATE users
                                            SET cash = %s
-                                           WHERE dropbase_id = %s
+                                           WHERE id = %s
                                            """)
         c.execute(update_account_balance_query, (cash-total, user_id))
         db.commit()
@@ -414,7 +414,7 @@ def sell():
         user_cash_query = SQL("""
                               SELECT cash
                               FROM users
-                              WHERE dropbase_id = %s
+                              WHERE id = %s
                               """)
         c.execute(user_cash_query, (user_id,))
         cash = c.fetchone()[0]
@@ -422,7 +422,7 @@ def sell():
         update_user_cash_query = SQL("""
                                      UPDATE users
                                      SET cash = %s
-                                     WHERE dropbase_id = %s
+                                     WHERE id = %s
                                      """)
         c.execute(update_user_cash_query, (cash + total, user_id))
         db.commit()
