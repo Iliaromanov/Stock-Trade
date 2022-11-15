@@ -39,11 +39,12 @@ DB_NAME = os.environ.get("DB_NAME")
 DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 DB_HOST = os.environ.get("DB_HOST")
+DB_PORT = os.environ.get("DB_PORT")
 
 @app.route("/")
 @login_required
 def index():
-    db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+    db = psycopg2.connect(database=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
     c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     """Show portfolio of stocks"""
     user_id = session['user_id']
@@ -93,7 +94,6 @@ def index():
     for stock in portfolio:
         stock['total'] = usd(stock['total'])
         stock['price'] = usd(stock['price'])      
-    print(f"type: {type(cash)}, val: {cash}")
     db.close()
     c.close()
     return render_template("index.html", portfolio=portfolio, cash=usd(cash), total=usd(total_wealth))
@@ -135,8 +135,7 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
-        print(session['user_id'])
-        print("^^USER ID HERE^^")
+
         # Redirect user to home page
         db.close()
         c.close()
