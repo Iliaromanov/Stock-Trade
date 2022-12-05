@@ -44,10 +44,9 @@ DB_PORT = os.environ.get("DB_PORT")
 @app.route("/")
 @login_required
 def index():
+    """Show portfolio of stocks"""
     db = psycopg2.connect(database=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
     c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    """Show portfolio of stocks"""
-    user_id = session['user_id']
     
     # Query db for users current cash
     cash_query = """
@@ -105,10 +104,10 @@ def login():
 
     # Forget any user_id
     session.clear()
-    db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
-    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+        db = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST)
+        c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         username = request.form.get("username")
         password = request.form.get("password")
 
