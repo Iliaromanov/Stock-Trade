@@ -94,6 +94,11 @@ export class StockTradeCdKappStack extends cdk.Stack {
       code: lambda.Code.fromAsset(__dirname + "/../build-python",), // created in Makefile
       runtime: lambda.Runtime.PYTHON_3_9,
       handler: "serverless_flask.lambda.lambda_handler",
+      role: lambdaRole,
+      timeout: Duration.seconds(30),
+      memorySize: 256,
+      environment: {"JSON_CONFIG_OVERRIDE": JSON.stringify(lambdaEnv)},
+      // logRetention: logs.RetentionDays.SIX_MONTHS, // default is infinite
     });
   }
 }
