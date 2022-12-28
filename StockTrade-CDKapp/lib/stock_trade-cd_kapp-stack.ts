@@ -42,6 +42,13 @@ const LAMBDA_CONFIG_ENV : {[key:string]: {[key:string]:any}} = {
   }
 };
 
+// For apigw throttling options to limit requests/second 
+//  and avoid unwated billing issues and apply
+//  token-buck style throttling to web app
+//  (https://en.wikipedia.org/wiki/Token_bucket)
+const MAX_RPS = 100; 
+const MAX_RPS_BUCKET_SIZE = 1000;
+
 
 export class StockTradeCdKappStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -100,6 +107,19 @@ export class StockTradeCdKappStack extends cdk.Stack {
       environment: {"JSON_CONFIG_OVERRIDE": JSON.stringify(lambdaEnv)},
       // logRetention: logs.RetentionDays.SIX_MONTHS, // default is infinite
     });
+
+    let restApi = new apigw.LambdaRestApi(this, "StockTradeLambdaRestApi", {
+      restApiName: `stock-trade-api-${stageName}`,
+      handler: webappLambda,
+      // set to all types to simplify handling of all content types
+      binaryMediaTypes: ["*/*"],
+      // apply token-bucket style throttling
+      // (check comment at globals definition above for more info)
+      deployOptions: {
+        throttlingBurstLimit: MAX_RPS_BUCKET_SIZE,
+        throttlingRateLimit: MAX_RPS
+      }
+    })
   }
 }
 
