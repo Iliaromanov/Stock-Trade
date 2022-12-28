@@ -1,7 +1,7 @@
-release: node_modules .pipenv lint test bundle-python
+release: node_modules .pipenv lint bundle-python
 
 lint:
-	pipenv run black --line-length 120 serverless_flask
+	pipenv run black --line-length 79 serverless_flask
 	pipenv run flake8 serverless_flask
 
 clean: 
