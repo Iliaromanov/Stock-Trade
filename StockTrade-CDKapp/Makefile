@@ -12,7 +12,6 @@ clean:
 	rm -rf .aws-sam/
 	rm -f requirements.txt
 	rm -f .deploy-dev-once
-	rm -rf node_modules
 	rm -f sam-params.json
 	rm -f .pipenv && pipenv --rm || true
 	echo "Clean is finished"
