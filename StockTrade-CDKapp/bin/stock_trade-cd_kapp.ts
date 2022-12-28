@@ -4,6 +4,14 @@ import * as cdk from 'aws-cdk-lib';
 import { StockTradeCdKappStack } from '../lib/stock_trade-cd_kapp-stack';
 
 const app = new cdk.App();
+
+// Find what stage the app is in and name the stack based on that
+const stackName = ({
+  "dev": "serverless-stock-trade-dev",
+  "staging": "serverless-stock-trade-staging",
+  "prod": "serverless-stock-trade-prod"
+} as Record<string, string>)[app.node.tryGetContext("stage") as string];
+
 new StockTradeCdKappStack(app, 'StockTradeCdKappStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
