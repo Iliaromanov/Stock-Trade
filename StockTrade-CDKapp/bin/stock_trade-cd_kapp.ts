@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { StockTradeCdKappStack } from '../lib/stock_trade-cd_kapp-stack';
+import { StockTradeCdKappStack } from '../lib/stock_trade-cdk_app-stack';
 
 const app = new cdk.App();
 
@@ -12,7 +12,7 @@ const stackName = ({
   "prod": "serverless-stock-trade-prod"
 } as Record<string, string>)[app.node.tryGetContext("stage") as string];
 
-new StockTradeCdKappStack(app, 'StockTradeCdKappStack', {
+new StockTradeCdKappStack(app, 'StockTradeCdkappStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
