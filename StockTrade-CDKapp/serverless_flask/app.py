@@ -6,7 +6,9 @@ app = Blueprint("SockTradeApp", __name__, template_folder="../templates")
 
 @app.route("/")
 def index():
-    return render_template("index.html", app=current_app, time=round(time.time()))
+    return render_template(
+        "index.html", app=current_app, time=round(time.time())
+    )
 
 
 @app.route("/example_json_api")

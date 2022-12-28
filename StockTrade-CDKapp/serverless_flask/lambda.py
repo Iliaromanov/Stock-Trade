@@ -11,7 +11,7 @@ def configure_logger():
             "version": 1,
             "formatters": {
                 "default": {
-                    "format": "[%(asctime)s] %(levelname)s in %(module)s: %(message)s",
+                    "format": "[%(asctime)s] %(levelname)s in %(module)s: %(message)s", # noqa
                 }
             },
             "handlers": {
@@ -21,9 +21,13 @@ def configure_logger():
                     "formatter": "default",
                 }
             },
-            "root": {"level": os.environ.get("ROOT_LOG_LEVEL", "INFO"), "handlers": ["wsgi"]},
+            "root": {
+                "level": os.environ.get("ROOT_LOG_LEVEL", "INFO"),
+                "handlers": ["wsgi"]
+            },
         }
     )
+
 
 configure_logger()
 app = create_app()
@@ -43,9 +47,11 @@ def lambda_handler(event, context):
             # patch host header
             headers["Host"] = cf_host
             event["multiValueHeaders"]["Host"] = [cf_host]
-            app.logger.info(f"Host header is successfully patched to {cf_host}")
+            app.logger.info(
+                f"Host header is successfully patched to {cf_host}"
+            )
 
         return inner_handler(event, context)
-    except:
+    except: # noqa
         app.logger.exception("Exception handling lambda")
         raise

@@ -18,7 +18,9 @@ def ensure_secret_key_exists(app: Flask):
     obj = s3.Object(bucket, key)
 
     try:
-        app.logger.debug(f"ensure_secret_key_exists: Checking for s3 bucket {bucket}")
+        app.logger.debug(
+            f"ensure_secret_key_exists: Checking for s3 bucket {bucket}"
+        )
         resp = obj.get()
         # the key already exists, so use that instead.
         app.config["SECRET_KEY"] = resp["Body"].read().decode("utf-8")
@@ -76,4 +78,4 @@ def create_app(config_overrides={}) -> Flask:
         )
         return response
 
-    return 
+    return app
