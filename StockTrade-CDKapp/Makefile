@@ -36,8 +36,8 @@ update-deps: clean
 build-python: .pipenv
 	mkdir -p "$@"/
 	echo "Building in $@/"
-	pipenv lock -r > requirements.txt
-	pip3 install -r requirements.txt -t "$@/"
+	pipenv requirements > requirements.txt
+	pip install -r requirements.txt -t "$@/"
 	# prune botocore and boto3 because they come with Lambda runtime
 	rm -rf "$@/boto3"
 	rm -rf "$@/botocore"
