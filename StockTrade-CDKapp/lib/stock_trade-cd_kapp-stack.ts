@@ -185,6 +185,25 @@ export class StockTradeCdKappStack extends cdk.Stack {
         value: "https://" + cdn.distributionDomainName
       });
     }
+
+    const grantLambdaResourcePermissions = (entity: iam.IGrantable) => {
+      appStore.grantReadWrite(entity);
+    };
+    grantLambdaResourcePermissions(lambdaRole);
+
+    // create dev user - not applicable for anything other than dev stage
+    if (this.node.tryGetContext("stage") === "dev") {
+      let localDevUser = new iam.User(this, "stock-trade-local-dev");
+      new CfnOutput(this, "devIamUser", {
+        value: localDevUser.userName
+      });
+      grantLambdaResourcePermissions(localDevUser);
+
+      // export lambda env for later use
+      new CfnOutput(this, "LambdaEnv", {
+        value: JSON.stringify(lambdaEnv)
+      });
+    }
   }
 }
 
