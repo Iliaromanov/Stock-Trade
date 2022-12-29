@@ -1,14 +1,48 @@
-<!doctype html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <title>Serverless Flask page</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='static.js') }}" type="text/javascript"></script>
-</head>
+{% block title %}Portfolio{% endblock %}
 
-<body>
-Hi! I am running on {{app.config["SERVER_NAME"]}}. Page was generated at {{time}}.
-</body>
-
-</html>
+{% block main %}
+    <head><meta http-equiv="refresh" content="10"/></head>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Shares</th>
+                <th>Percent</th>
+                <th>Price</th>
+                <th>TOTAL</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <td colspan="5"></td>
+            <td><b>{{ total }}</b></td>
+        </tfoot>
+        <tbody>
+            {% for stock in portfolio %}
+                {% if stock['share_count'] != 0 %}
+                    <tr>
+                        <td>{{ stock['symbol'] }}</td>
+                        <td>{{ stock['name'] }}</td>
+                        <td>{{ stock['share_count'] }}</td>
+                        {% if stock['percent'][0] == "green" %}
+                            <td style="color: green;">{{ stock['percent'][1] }}</td>
+                        {% elif stock['percent'][0] == "red" %}
+                            <td style="color: red;">{{ stock['percent'][1] }}</td>
+                        {% else %}
+                            <td style="color: rgb(71, 69, 69);">{{ stock['percent'][1] }}</td>
+                        {% endif %}
+                        <td>{{ stock['price'] }}</td>
+                        <td>{{ stock['total'] }}</td>
+                    </tr>
+                {% endif %}       
+            {% endfor %}
+            <tr>
+                <td><b>CASH</b></td>
+                <td colspan="4"></td>
+                <td><b>{{ cash }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

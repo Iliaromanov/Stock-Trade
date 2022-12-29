@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_session import Session
 import os
 import json
 import logging
@@ -52,6 +53,8 @@ def create_app(config_overrides={}) -> Flask:
 
     if not app.config.get("UNITTEST", False):
         ensure_secret_key_exists(app)
+
+    Session(app)
 
     cacheable_methods = set(["GET", "HEAD"])
 
