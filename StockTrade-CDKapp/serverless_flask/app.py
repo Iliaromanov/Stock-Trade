@@ -341,7 +341,7 @@ def buy():
         result = c.fetchone()
 
         # The user already has some shares of the bought stock
-        if result != None:
+        if result is not None:
             current_shares = result[0]
             update_owned_stocks_query = SQL(
                 """

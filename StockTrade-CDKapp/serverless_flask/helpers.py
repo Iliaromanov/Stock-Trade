@@ -46,13 +46,13 @@ def lookup(symbol: str) -> dict:
             "pk_416fe4a246914cb594e7deeda6251bf5"  # os.environ.get("API_KEY")
         )
         response = requests.get(
-            f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}" #noqa
+            f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}"  # noqa
         )
         response.raise_for_status()
     except requests.RequestException:
         flash(
-          "IEX is currently under maintenance. Sorry for the inconvenience",
-          "error"
+            "IEX is currently under maintenance. Sorry for the inconvenience",
+            "error",
         )
         return None
 
