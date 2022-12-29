@@ -1,8 +1,7 @@
-import os
 import requests
 import urllib.parse
 
-from flask import redirect, render_template, request, session, flash
+from flask import redirect, render_template, session, flash
 from functools import wraps
 
 
@@ -12,12 +11,15 @@ def login_required(f):
 
     http://flask.pocoo.org/docs/1.0/patterns/viewdecorators/
     """
+
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get("user_id") is None:
             return redirect("/login")
         return f(*args, **kwargs)
+
     return decorated_function
+
 
 def percent(value: float) -> tuple:
     """Formats float value to percent and denotes colour of value in table"""
@@ -29,6 +31,7 @@ def percent(value: float) -> tuple:
     else:
         return ("green", f"%{rounded}")
 
+
 def usd(value: float) -> str:
     """Format value as USD."""
     return f"${value:,.2f}"
@@ -39,11 +42,18 @@ def lookup(symbol: str) -> dict:
 
     # Contact API
     try:
-        api_key = "pk_416fe4a246914cb594e7deeda6251bf5" #os.environ.get("API_KEY")
-        response = requests.get(f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}")
+        api_key = (
+            "pk_416fe4a246914cb594e7deeda6251bf5"  # os.environ.get("API_KEY")
+        )
+        response = requests.get(
+            f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}" #noqa
+        )
         response.raise_for_status()
     except requests.RequestException:
-        # flash("IEX is currently under maintenance. Sorry for the inconvenience", "error")
+        flash(
+          "IEX is currently under maintenance. Sorry for the inconvenience",
+          "error"
+        )
         return None
 
     # Parse response
@@ -53,7 +63,7 @@ def lookup(symbol: str) -> dict:
             "name": quote["companyName"],
             "price": float(quote["latestPrice"]),
             "symbol": quote["symbol"],
-            "percent": percent(float(quote["changePercent"]))
+            "percent": percent(float(quote["changePercent"])),
         }
     except (KeyError, TypeError, ValueError):
         return None
@@ -61,14 +71,27 @@ def lookup(symbol: str) -> dict:
 
 def apology(message: str, code=400):
     """Render message as an apology to user."""
+
     def escape(s):
         """
         Escape special characters.
 
         https://github.com/jacebrowning/memegen#special-characters
         """
-        for old, new in [("-", "--"), (" ", "-"), ("_", "__"), ("?", "~q"),
-                         ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
+        for old, new in [
+            ("-", "--"),
+            (" ", "-"),
+            ("_", "__"),
+            ("?", "~q"),
+            ("%", "~p"),
+            ("#", "~h"),
+            ("/", "~s"),
+            ('"', "''"),
+        ]:
             s = s.replace(old, new)
         return s
-    return render_template("apology.html", top=code, bottom=escape(message)), code
+
+    return (
+        render_template("apology.html", top=code, bottom=escape(message)),
+        code,
+    )
