@@ -11,7 +11,7 @@ def configure_logger():
             "version": 1,
             "formatters": {
                 "default": {
-                    "format": "[%(asctime)s] %(levelname)s in %(module)s: %(message)s", # noqa
+                    "format": "[%(asctime)s] %(levelname)s in %(module)s: %(message)s",  # noqa
                 }
             },
             "handlers": {
@@ -23,7 +23,7 @@ def configure_logger():
             },
             "root": {
                 "level": os.environ.get("ROOT_LOG_LEVEL", "INFO"),
-                "handlers": ["wsgi"]
+                "handlers": ["wsgi"],
             },
         }
     )
@@ -52,6 +52,6 @@ def lambda_handler(event, context):
             )
 
         return inner_handler(event, context)
-    except: # noqa
+    except:  # noqa
         app.logger.exception("Exception handling lambda")
         raise
