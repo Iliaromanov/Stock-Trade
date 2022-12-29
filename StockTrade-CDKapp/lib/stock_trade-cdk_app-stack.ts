@@ -21,7 +21,6 @@ const LAMBDA_CONFIG_ENV : {[key:string]: {[key:string]:any}} = {
     "TEMPLATES_AUTO_RELOAD": true,
     "SEND_FILE_MAX_AGE_DEFAULT": 300,
     "PERMANENT_SESSION_LIFETIME": 86400, // 1 day
-    "SERVER_NAME": "localhost:5000",
     "ROOT_LOG_LEVEL": "DEBUG"
   },
   'staging': {
@@ -104,7 +103,15 @@ export class StockTradeCdKappStack extends cdk.Stack {
       role: lambdaRole,
       timeout: Duration.seconds(30),
       memorySize: 256,
-      environment: {"JSON_CONFIG_OVERRIDE": JSON.stringify(lambdaEnv)},
+      environment: {
+        "JSON_CONFIG_OVERRIDE": JSON.stringify(lambdaEnv),
+        // the below will be added manually through AWS console
+        "DB_NAME": "SECRET",
+        "DB_USER": "SECRET",
+        "DB_PASS": "SECRET",
+        "DB_HOST": "SECRET",
+        "DB_PORT": "SECRET",
+      },
       // logRetention: logs.RetentionDays.SIX_MONTHS, // default is infinite
     });
 
