@@ -4,6 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+psycopg2-binary = "*"
+typing_extensions = "*"
 flask = "*"
 flask-session = "*"
 requests = "*"
@@ -18,7 +20,7 @@ flake8 = "*"
 black = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true

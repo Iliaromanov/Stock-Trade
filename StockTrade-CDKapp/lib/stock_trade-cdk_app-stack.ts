@@ -98,7 +98,7 @@ export class StockTradeCdKappStack extends cdk.Stack {
     let webappLambda = new lambda.Function(this, "StockTradeLambda", {
       functionName: `stock-trade-lambda-${stageName}`,
       code: lambda.Code.fromAsset(__dirname + "/../build-python",), // created in Makefile
-      runtime: lambda.Runtime.PYTHON_3_9,
+      runtime: lambda.Runtime.PYTHON_3_8,
       handler: "serverless_flask.lambda.lambda_handler",
       role: lambdaRole,
       timeout: Duration.seconds(30),
