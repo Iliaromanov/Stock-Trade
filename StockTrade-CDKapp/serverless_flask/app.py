@@ -11,13 +11,14 @@ from werkzeug.exceptions import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
+from .helpers import apology, login_required, lookup, usd
 
 app = Blueprint(
     "SockTradeApp",
     __name__,
     template_folder="./templates",
-    static_folder="./static",
+    static_folder="./styles",
+    static_url_path="/styles"
 )
 
 

@@ -3,6 +3,7 @@ from flask_session import Session
 import os
 import json
 import logging
+from tempfile import mkdtemp
 
 DEFAULT_CACHE_DURATION = 300
 
@@ -25,9 +26,11 @@ def ensure_secret_key_exists(app: Flask):
         resp = obj.get()
         # the key already exists, so use that instead.
         app.config["SECRET_KEY"] = resp["Body"].read().decode("utf-8")
+        app.secret_key = app.config["SECRET_KEY"]
     except botocore.exceptions.ClientError as ex:
         if ex.response["Error"]["Code"] == "NoSuchKey":
             app.config["SECRET_KEY"] = secrets.token_hex()
+            app.secret_key = app.config["SECRET_KEY"]
             obj.put(Body=app.config["SECRET_KEY"].encode("utf-8"))
             app.logger.info("Created a new SECRET_KEY")
         else:
@@ -54,7 +57,14 @@ def create_app(config_overrides={}) -> Flask:
     if not app.config.get("UNITTEST", False):
         ensure_secret_key_exists(app)
 
+    app.config["SESSION_TYPE"] = "filesystem"
+    app.config["SESSION_FILE_DIR"] = mkdtemp()
+
+    app.logger.info("ABOUT TO CREATE SESSION")
+
     Session(app)
+
+    app.logger.info("CREATED SESSION !!!")
 
     cacheable_methods = set(["GET", "HEAD"])
 
