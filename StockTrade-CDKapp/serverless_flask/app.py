@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, redirect, request, session, flash
 import psycopg2
 from psycopg2.sql import SQL
+import psycopg2.extras
 from werkzeug.exceptions import (
     default_exceptions,
     HTTPException,
@@ -18,7 +19,7 @@ app = Blueprint(
     __name__,
     template_folder="./templates",
     static_folder="./styles",
-    static_url_path="/styles"
+    static_url_path="/styles",
 )
 
 

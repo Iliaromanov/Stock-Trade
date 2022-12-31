@@ -5,40 +5,9 @@ import json
 import logging
 from tempfile import mkdtemp
 
-DEFAULT_CACHE_DURATION = 300
-
-
-def ensure_secret_key_exists(app: Flask):
-    import boto3
-    import botocore
-    import secrets
-
-    # this is where the session secret goes
-    key = "SECRET_KEY"
-    s3 = boto3.resource("s3")
-    bucket = app.config["S3_BUCKET"]
-    obj = s3.Object(bucket, key)
-
-    try:
-        app.logger.debug(
-            f"ensure_secret_key_exists: Checking for s3 bucket {bucket}"
-        )
-        resp = obj.get()
-        # the key already exists, so use that instead.
-        app.config["SECRET_KEY"] = resp["Body"].read().decode("utf-8")
-        app.secret_key = app.config["SECRET_KEY"]
-    except botocore.exceptions.ClientError as ex:
-        if ex.response["Error"]["Code"] == "NoSuchKey":
-            app.config["SECRET_KEY"] = secrets.token_hex()
-            app.secret_key = app.config["SECRET_KEY"]
-            obj.put(Body=app.config["SECRET_KEY"].encode("utf-8"))
-            app.logger.info("Created a new SECRET_KEY")
-        else:
-            raise
-
 
 def create_app(config_overrides={}) -> Flask:
-    app = Flask("serverless-flask")
+    app = Flask("serverless-flask", static_url_path="/styles")
     # Apply a JSON config override from env var if exists
     if os.environ.get("JSON_CONFIG_OVERRIDE"):
         app.config.update(json.loads(os.environ.get("JSON_CONFIG_OVERRIDE")))
@@ -54,30 +23,23 @@ def create_app(config_overrides={}) -> Flask:
 
     app.logger.debug("Config is: %r" % app.config)
 
-    if not app.config.get("UNITTEST", False):
-        ensure_secret_key_exists(app)
-
     app.config["SESSION_TYPE"] = "filesystem"
+    app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_FILE_DIR"] = mkdtemp()
-
-    app.logger.info("ABOUT TO CREATE SESSION")
 
     Session(app)
 
-    app.logger.info("CREATED SESSION !!!")
-
-    cacheable_methods = set(["GET", "HEAD"])
-
     @app.after_request
     def after_request(response):
+        response.headers[
+            "Cache-Control"
+        ] = "no-cache, no-store, must-revalidate"
+        response.headers["Expires"] = 0
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Cache-Control"] = "no-store"
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
         response.headers["Content-Security-Policy"] = "frame-ancestors self"
-        if request.method not in cacheable_methods:
-            # don't cache if logged in or not cacheable
-            response.headers["Cache-Control"] = "no-store"
-        elif not response.headers.get("Cache-Control", False):
-            # cache for 5 minutes by default, unless otherwise specified.
-            response.headers["Cache-Control"] = "public, max-age=300"
+
         app.logger.info(
             "[from:%s|%s %s]+[%s]=>[%d|%dbytes]"
             % (
