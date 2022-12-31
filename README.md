@@ -17,6 +17,12 @@
 
 The previous deployement can be found in the StockTrade-HerokuApp_DEPRECATED directory; this was a simple deployement of the app to Heroku.
 
+Due to Heroku removing their free tier as of December 2022, and this app overall having too simplistic of an infrastructure, I decided to go to AWS for hosting this web app.
+
+I utilized the AWS CDK to provision my desired infrastructure using TypeScript code to produce an AWS CloudFormation stack and templates for AWS resource configuration and deployement. 
+
+The current and upgraded version of this web app (deployed to AWS through an AWS CDK setup) can be found in the StockTrade-CDKapp directory.
+
 
 <!-- <img src="https://img.shields.io/badge/-Python-blue" /> <img src="https://img.shields.io/badge/-Flask-green" /> <img src="https://img.shields.io/badge/-PostgreSQL-red" /> <img src="https://img.shields.io/badge/-IEX_Cloud_API-orange" /> <img src="https://img.shields.io/badge/-HTML5-yellow" /> <img src="https://img.shields.io/badge/-CSS-purple" /> -->
 <!--[Python](https://img.shields.io/badge/-Python-yellow) [Flask](https://img.shields.io/badge/-Flask-green) [PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange)-->
