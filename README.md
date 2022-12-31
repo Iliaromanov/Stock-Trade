@@ -32,5 +32,3 @@
 
 <!--Made with ❤ by [Ilia](https://github.com/Iliaromanov) 😁
 https://ilia-stock-trade.herokuapp.com/-->
-
-test
