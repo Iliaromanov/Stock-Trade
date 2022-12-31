@@ -15,6 +15,8 @@
 
 ‼️ This web app has gone through a big infrastructure overhaul ‼️
 
+The previous deployement can be found in the StockTrade-HerokuApp_DEPRECATED directory; this was a simple deployement of the app to Heroku.
+
 
 <!-- <img src="https://img.shields.io/badge/-Python-blue" /> <img src="https://img.shields.io/badge/-Flask-green" /> <img src="https://img.shields.io/badge/-PostgreSQL-red" /> <img src="https://img.shields.io/badge/-IEX_Cloud_API-orange" /> <img src="https://img.shields.io/badge/-HTML5-yellow" /> <img src="https://img.shields.io/badge/-CSS-purple" /> -->
 <!--[Python](https://img.shields.io/badge/-Python-yellow) [Flask](https://img.shields.io/badge/-Flask-green) [PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange)-->
