@@ -14,9 +14,11 @@ clean:
 	rm -f .deploy-dev-once
 	rm -f sam-params.json
 	rm -f .pipenv && pipenv --rm || true
+	rm -f Pipfile.lock
 	echo "Clean is finished"
 
 .pipenv:
+	pipenv lock
 	pipenv sync -d
 	touch "$@"
 
@@ -48,6 +50,7 @@ build-python: .pipenv
 bundle-python: build-python
 	echo "Copying local Python files"
 	rsync -ah --exclude '*.pyc' serverless_flask  "build-python/"
+	cp -r psycopg2 "build-python/"
 	echo "The Python bundle's size: $$(du -sh "build-python/")"
 
 pytest:
