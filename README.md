@@ -11,6 +11,11 @@
 ![CSS](https://img.shields.io/badge/-CSS-05122A?style=flat&logo=CSS)
 ![IEX_Cloud_API](https://img.shields.io/badge/-IEX_Cloud_API-05122A?style=flat&logo=IEX_Cloud_API)
 
+## AWS Infrastructure
+
+‼️ This web app has gone through a big infrastructure overhaul ‼️
+
+
 <!-- <img src="https://img.shields.io/badge/-Python-blue" /> <img src="https://img.shields.io/badge/-Flask-green" /> <img src="https://img.shields.io/badge/-PostgreSQL-red" /> <img src="https://img.shields.io/badge/-IEX_Cloud_API-orange" /> <img src="https://img.shields.io/badge/-HTML5-yellow" /> <img src="https://img.shields.io/badge/-CSS-purple" /> -->
 <!--[Python](https://img.shields.io/badge/-Python-yellow) [Flask](https://img.shields.io/badge/-Flask-green) [PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange)-->
 
