@@ -23,6 +23,10 @@ I utilized the AWS CDK to provision my desired infrastructure using TypeScript c
 
 The current and upgraded version of this web app (deployed to AWS through an AWS CDK setup) can be found in the StockTrade-CDKapp directory.
 
+Here is a flowchart of what the current infra of this web app looks like:
+
+<img src="readme_images/serverless-flask-infra.png" alt="$tock Trade Infra" style="text-align: center" />
+
 
 <!-- <img src="https://img.shields.io/badge/-Python-blue" /> <img src="https://img.shields.io/badge/-Flask-green" /> <img src="https://img.shields.io/badge/-PostgreSQL-red" /> <img src="https://img.shields.io/badge/-IEX_Cloud_API-orange" /> <img src="https://img.shields.io/badge/-HTML5-yellow" /> <img src="https://img.shields.io/badge/-CSS-purple" /> -->
 <!--[Python](https://img.shields.io/badge/-Python-yellow) [Flask](https://img.shields.io/badge/-Flask-green) [PostgreSQL](https://img.shields.io/badge/-PostgreSQL-orange)-->
