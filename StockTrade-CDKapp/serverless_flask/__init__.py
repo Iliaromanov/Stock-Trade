@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 
 
 def create_app(config_overrides={}) -> Flask:
-    app = Flask("serverless-flask", static_url_path="/styles")
+    app = Flask("serverless-flask")
     # Apply a JSON config override from env var if exists
     if os.environ.get("JSON_CONFIG_OVERRIDE"):
         app.config.update(json.loads(os.environ.get("JSON_CONFIG_OVERRIDE")))
@@ -23,7 +23,7 @@ def create_app(config_overrides={}) -> Flask:
 
     app.logger.debug("Config is: %r" % app.config)
 
-    app.config["SESSION_TYPE"] = "filesystem"
+    app.config["SESSION_TYPE"] = 'filesystem'
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_FILE_DIR"] = mkdtemp()
 
@@ -31,15 +31,11 @@ def create_app(config_overrides={}) -> Flask:
 
     @app.after_request
     def after_request(response):
-        response.headers[
-            "Cache-Control"
-        ] = "no-cache, no-store, must-revalidate"
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Expires"] = 0
         response.headers["Pragma"] = "no-cache"
-        response.headers["Cache-Control"] = "no-store"
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
         response.headers["Content-Security-Policy"] = "frame-ancestors self"
-
         app.logger.info(
             "[from:%s|%s %s]+[%s]=>[%d|%dbytes]"
             % (

@@ -19,7 +19,6 @@ app = Blueprint(
     __name__,
     template_folder="./templates",
     static_folder="./styles",
-    static_url_path="/styles",
 )
 
 
