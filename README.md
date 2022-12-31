@@ -33,7 +33,7 @@ The current and upgraded version of this web app (deployed to AWS through an AWS
 - Real time stock prices obtained using the IEX stock exchange API.
 -->
 
-## <!--⚙--> Installation 
+<!-- ## ⚙ Installation 
 
 1. `git clone https://github.com/Iliaromanov/Stock-Trade.git`
 
@@ -41,7 +41,7 @@ The current and upgraded version of this web app (deployed to AWS through an AWS
 
 3. `pip install -r requirements.txt`
 
-4. `python app.py`
+4. `python app.py` -->
 
 <!--Made with ❤ by [Ilia](https://github.com/Iliaromanov) 😁
 https://ilia-stock-trade.herokuapp.com/-->
