@@ -54,14 +54,6 @@ export class StockTradeCdKappStack extends cdk.Stack {
     super(scope, id, props);
 
     const stageName = this.node.tryGetContext("stage") as string;
-    
-    // S3 bucket for storing flask session secret key and Sqlite db
-    let appStore = new s3.Bucket(this, "S3Storage", {
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: RemovalPolicy.RETAIN,
-      encryption: BucketEncryption.S3_MANAGED,
-      bucketName: `${this.account}-stock-trade-s3storage-${stageName}`
-    });
 
     // IAM role for lambda which grants access to logs and cloudwatch metrics
     //  and can be used later to grant lambda r/w permissions to other resources
@@ -93,7 +85,6 @@ export class StockTradeCdKappStack extends cdk.Stack {
     });
 
     let lambdaEnv = LAMBDA_CONFIG_ENV[stageName];
-    lambdaEnv["S3_BUCKET"] = appStore.bucketName;
 
     let webappLambda = new lambda.Function(this, "StockTradeLambda", {
       functionName: `stock-trade-lambda-${stageName}`,
@@ -190,25 +181,6 @@ export class StockTradeCdKappStack extends cdk.Stack {
       });
       new CfnOutput(this, "CDNDomain", {
         value: "https://" + cdn.distributionDomainName
-      });
-    }
-
-    const grantLambdaResourcePermissions = (entity: iam.IGrantable) => {
-      appStore.grantReadWrite(entity);
-    };
-    grantLambdaResourcePermissions(lambdaRole);
-
-    // create dev user - not applicable for anything other than dev stage
-    if (this.node.tryGetContext("stage") === "dev") {
-      let localDevUser = new iam.User(this, "stock-trade-local-dev");
-      new CfnOutput(this, "devIamUser", {
-        value: localDevUser.userName
-      });
-      grantLambdaResourcePermissions(localDevUser);
-
-      // export lambda env for later use
-      new CfnOutput(this, "LambdaEnv", {
-        value: JSON.stringify(lambdaEnv)
       });
     }
   }
