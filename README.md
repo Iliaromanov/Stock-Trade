@@ -2,7 +2,7 @@
 <!--<img src="demo/Logo.png" alt="$tock Trade" style="text-align: center" />-->
 # Stock-Trade
 
-<!--A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange.-->A web app that allows users to track real-time stock prices, providing users with personal accounts including stock portfolios and transaction histories. Check out $tock Trade <a href="https://ilia-stock-trade.herokuapp.com/" target="_top">here</a>!
+<!--A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange.-->A web app that allows users to track real-time stock prices, providing users with personal accounts including stock portfolios and transaction histories. Check out $tock Trade <a href="https://d1swsc7pdfwfna.cloudfront.net/" target="_top">here</a>!
 
 ![Python](https://img.shields.io/badge/-Python-05122A?style=flat&logo=Python)
 ![Flask](https://img.shields.io/badge/-Flask-05122A?style=flat&logo=Flask)
