@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+psycopg2-binary = "*"
+typing_extensions = "*"
+flask = "*"
+flask-session = "*"
+requests = "*"
+apig-wsgi = "*"
+certifi = "*"
+cryptography = "*"
+boto3 = "*"
+
+[dev-packages]
+pytest = "*"
+flake8 = "*"
+black = "*"
+
+[requires]
+python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
