@@ -2,7 +2,7 @@
 <!--<img src="demo/Logo.png" alt="$tock Trade" style="text-align: center" />-->
 # Stock-Trade
 
-<!--A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange.-->A web app that allows users to track real-time stock prices, providing users with personal accounts including stock portfolios and transaction histories. Check out $tock Trade <a href="https://d1swsc7pdfwfna.cloudfront.net/" target="_top">here</a>!
+<!--A stock trading simulator web app via which users can buy and sell stocks with real-time prices from the IEX stock exchange.-->A web app that allows users to track real-time stock prices, providing users with personal accounts including stock portfolios and transaction histories. <!-- Check out $tock Trade <a href="https://d1swsc7pdfwfna.cloudfront.net/" target="_top">here</a>! -->
 
 ![Python](https://img.shields.io/badge/-Python-05122A?style=flat&logo=Python)
 ![Flask](https://img.shields.io/badge/-Flask-05122A?style=flat&logo=Flask)
@@ -13,11 +13,11 @@
 
 ## AWS Infrastructure
 
-‼️ This web app has gone through a big infrastructure overhaul ‼️
+I decided to change up the infrastructure of the project from Heroku to AWS Lambda, hence the two directories.
 
-The previous deployement can be found in the StockTrade-HerokuApp_DEPRECATED directory; this was a simple deployement of the app to Heroku.
+The previous deployement can be found in the StockTrade-HerokuApp_DEPRECATED directory; this was a simple deployment of the app to Heroku.
 
-Due to Heroku removing their free tier as of December 2022, and this app overall having too simplistic of an infrastructure, I decided to go to AWS for hosting this web app.
+Due to Heroku removing their free tier as of December 2022, and to gain more control over the infrastructure, I decided to switch to AWS for hosting this web app.
 
 I utilized the AWS CDK to provision my desired infrastructure using TypeScript code to produce an AWS CloudFormation stack and templates for AWS resource configuration and deployement. 
 
@@ -25,7 +25,7 @@ The current and upgraded version of this web app (deployed to AWS through an AWS
 
 Here is a flowchart of what the current infra of this web app looks like:
 
-<img src="readme_images/serverless-flask-infra.png" alt="$tock Trade Infra" style="text-align: center" />
+<img src="readme_images/serverless-flask-infra.png" alt="$tock Trade Infra" style="text-align: center; background-color: white" />
 
 
 <!-- <img src="https://img.shields.io/badge/-Python-blue" /> <img src="https://img.shields.io/badge/-Flask-green" /> <img src="https://img.shields.io/badge/-PostgreSQL-red" /> <img src="https://img.shields.io/badge/-IEX_Cloud_API-orange" /> <img src="https://img.shields.io/badge/-HTML5-yellow" /> <img src="https://img.shields.io/badge/-CSS-purple" /> -->
